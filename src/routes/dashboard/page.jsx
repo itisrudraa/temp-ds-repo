@@ -71,21 +71,26 @@ const DashboardPage = () => {
                         </span>
                     </div>
                 </div>
-                <div className="card">
-                    <div className="card-header">
-                        <div className="rounded-lg bg-blue-500/20 p-2 text-blue-500 transition-colors dark:bg-blue-600/20 dark:text-blue-600">
-                            <CreditCard size={26} />
-                        </div>
-                        <p className="card-title">Sales</p>
+            <div className="card">
+                <div className="card-header">
+                    <div className="rounded-lg bg-green-500/20 p-2 text-green-500">
+                        <TrendingUp size={26} />
                     </div>
-                    <div className="card-body bg-slate-100 transition-colors dark:bg-slate-950">
-                        <p className="text-3xl font-bold text-slate-900 transition-colors dark:text-slate-50">12,340</p>
-                        <span className="flex w-fit items-center gap-x-2 rounded-full border border-blue-500 px-2 py-1 font-medium text-blue-500 dark:border-blue-600 dark:text-blue-600">
-                            <TrendingUp size={18} />
-                            19%
-                        </span>
-                    </div>
+                    <p className="card-title">Progress</p>
                 </div>
+
+                <div className="card-body bg-slate-100 dark:bg-slate-950">
+                    <p className="text-3xl font-bold text-slate-900 dark:text-slate-50">
+                        {vaultData.goal > 0 
+                            ? ((vaultData.saved / vaultData.goal) * 100).toFixed(0) 
+                            : 0}%
+                    </p>
+
+                    <span className="flex w-fit items-center gap-x-2 rounded-full border border-green-500 px-2 py-1 font-medium text-green-500">
+                        🚀 On Track
+                    </span>
+                </div>
+            </div>
             </div>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-7">
                 <div className="card col-span-1 md:col-span-2 lg:col-span-4">
