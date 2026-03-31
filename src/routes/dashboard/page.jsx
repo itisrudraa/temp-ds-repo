@@ -37,12 +37,12 @@ const DashboardPage = () => {
 
             // ✅ add transaction
             setTransactions(prev => [
-                ...prev,
                 {
                     id: Date.now(),
                     type: "Deposit",
                     amount: amount
-                }
+                },
+                ...prev
             ]);
 
             setDepositAmount("");
@@ -51,29 +51,28 @@ const DashboardPage = () => {
         const handleWithdraw = () => {
             const amount = Number(withdrawAmount);
 
-            // to handle Invalid input
             if (!amount || amount <= 0) {
-                alert("Enter a valid amount ❌");
+                alert("Enter valid amount ❌");
                 return;
             }
 
-            //  smart Goal lock feature
+            // smart Goal lock
             if (vaultData.saved < goal) {
                 alert("Funds are locked until goal is reached 🔒");
 
                 setTransactions(prev => [
-                    ...prev,
                     {
                         id: Date.now(),
                         type: "Withdraw (Locked)",
                         amount: amount
-                    }
+                    },
+                    ...prev
                 ]);
 
                 return;
             }
 
-            // Prevent overdraft
+            // 🚫 Prevent overdraft
             if (amount > vaultData.saved) {
                 alert("Insufficient balance ❌");
                 return;
@@ -81,14 +80,13 @@ const DashboardPage = () => {
 
             vaultData.saved -= amount;
 
-            // ✅ add transaction
             setTransactions(prev => [
-                ...prev,
                 {
                     id: Date.now(),
                     type: "Withdraw",
                     amount: amount
-                }
+                },
+                ...prev
             ]);
 
             setWithdrawAmount("");
