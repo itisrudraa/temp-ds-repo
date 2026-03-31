@@ -1,5 +1,7 @@
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
+import { useState } from "react";
+
 import { useTheme } from "@/hooks/use-theme";
 
 import { overviewData, recentSalesData, topProducts } from "@/constants";
@@ -10,11 +12,52 @@ import { CreditCard, DollarSign, Package, PencilLine, Star, Trash, TrendingUp, U
 
 const DashboardPage = () => {
     const { theme } = useTheme();
+    const [depositAmount, setDepositAmount] = useState("");
+    const [withdrawAmount, setWithdrawAmount] = useState("");
     const vaultData = {
         wallet: 25,
         saved: 10,
         goal: 20
     };
+
+        const handleDeposit = () => {
+            const amount = Number(depositAmount);
+
+            // to handle Invalid input
+            if (!amount || amount <= 0) {
+                alert("Enter a valid amount ❌");
+                return;
+            }
+
+            vaultData.saved += amount;
+            setDepositAmount("");
+        };
+
+    const handleWithdraw = () => {
+        const amount = Number(withdrawAmount);
+
+        // to handle Invalid input
+        if (!amount || amount <= 0) {
+            alert("Enter a valid amount ❌");
+            return;
+        }
+
+        //  smart Goal lock feature
+        if (vaultData.saved < vaultData.goal) {
+            alert("Funds are locked until goal is reached 🔒");
+            return;
+        }
+
+        // Prevent overdraft
+        if (amount > vaultData.saved) {
+            alert("Insufficient balance ❌");
+            return;
+        }
+
+        vaultData.saved -= amount;
+        setWithdrawAmount("");
+    };
+
     return (
         <div className="flex flex-col gap-y-4">
             <h1 className="title">Dashboard</h1>
@@ -71,26 +114,26 @@ const DashboardPage = () => {
                         </span>
                     </div>
                 </div>
-            <div className="card">
-                <div className="card-header">
-                    <div className="rounded-lg bg-green-500/20 p-2 text-green-500">
-                        <TrendingUp size={26} />
+                <div className="card">
+                    <div className="card-header">
+                        <div className="rounded-lg bg-green-500/20 p-2 text-green-500">
+                            <TrendingUp size={26} />
+                        </div>
+                        <p className="card-title">Progress</p>
                     </div>
-                    <p className="card-title">Progress</p>
-                </div>
 
-                <div className="card-body bg-slate-100 dark:bg-slate-950">
-                    <p className="text-3xl font-bold text-slate-900 dark:text-slate-50">
-                        {vaultData.goal > 0 
-                            ? ((vaultData.saved / vaultData.goal) * 100).toFixed(0) 
-                            : 0}%
-                    </p>
+                    <div className="card-body bg-slate-100 dark:bg-slate-950">
+                        <p className="text-3xl font-bold text-slate-900 dark:text-slate-50">
+                            {vaultData.goal > 0 
+                                ? ((vaultData.saved / vaultData.goal) * 100).toFixed(0) 
+                                : 0}%
+                        </p>
 
-                    <span className="flex w-fit items-center gap-x-2 rounded-full border border-green-500 px-2 py-1 font-medium text-green-500">
-                        🚀 On Track
-                    </span>
+                        <span className="flex w-fit items-center gap-x-2 rounded-full border border-green-500 px-2 py-1 font-medium text-green-500">
+                            🚀 On Track
+                        </span>
+                    </div>
                 </div>
-            </div>
             </div>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-7">
                 <div className="card col-span-1 md:col-span-2 lg:col-span-4">
@@ -163,28 +206,50 @@ const DashboardPage = () => {
                 </div>
                 <div className="card col-span-1 md:col-span-2 lg:col-span-3">
                     <div className="card-header">
-                        <p className="card-title">Recent Sales</p>
+                        <p className="card-title">Vault Actions</p>
                     </div>
-                    <div className="card-body h-[300px] overflow-auto p-0">
-                        {recentSalesData.map((sale) => (
-                            <div
-                                key={sale.id}
-                                className="flex items-center justify-between gap-x-4 py-2 pr-2"
+                    <div className="card-body h-[300px] flex flex-col gap-6 p-4">
+
+                        {/* 🟢 DEPOSIT */}
+                        <div className="flex flex-col gap-2">
+                            <p className="text-sm font-medium text-slate-900 dark:text-slate-100">Deposit ALGO</p>
+
+                            <input
+                                type="number"
+                                placeholder="Enter amount"
+                                value={depositAmount}
+                                onChange={(e) => setDepositAmount(e.target.value)}
+                                className="p-2 rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400 outline-none"
+                            />
+
+                            <button
+                                onClick={handleDeposit}
+                                className="bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition"
                             >
-                                <div className="flex items-center gap-x-4">
-                                    <img
-                                        src={sale.image}
-                                        alt={sale.name}
-                                        className="size-10 flex-shrink-0 rounded-full object-cover"
-                                    />
-                                    <div className="flex flex-col gap-y-2">
-                                        <p className="font-medium text-slate-900 dark:text-slate-50">{sale.name}</p>
-                                        <p className="text-sm text-slate-600 dark:text-slate-400">{sale.email}</p>
-                                    </div>
-                                </div>
-                                <p className="font-medium text-slate-900 dark:text-slate-50">${sale.total}</p>
-                            </div>
-                        ))}
+                                Deposit 💰
+                            </button>
+                        </div>
+
+                        {/* 🔴 WITHDRAW */}
+                        <div className="flex flex-col gap-2">
+                            <p className="text-sm font-medium text-slate-900 dark:text-slate-100">Withdraw ALGO</p>
+
+                            <input
+                                type="number"
+                                placeholder="Enter amount"
+                                value={withdrawAmount}
+                                onChange={(e) => setWithdrawAmount(e.target.value)}
+                                className="p-2 rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400 outline-none"
+                            />
+
+                            <button
+                                onClick={handleWithdraw}
+                                className="bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition"
+                            >
+                                Withdraw 🔒
+                            </button>
+                        </div>
+
                     </div>
                 </div>
             </div>
