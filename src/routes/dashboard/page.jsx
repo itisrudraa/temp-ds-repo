@@ -17,6 +17,7 @@ const DashboardPage = () => {
     const [goal, setGoal] = useState(20);
     const [isEditingGoal, setIsEditingGoal] = useState(false);
     const [newGoal, setNewGoal] = useState("");
+    const [transactions, setTransactions] = useState([]);
     const vaultData = {
         wallet: 25,
         saved: 10,
@@ -33,6 +34,17 @@ const DashboardPage = () => {
             }
 
             vaultData.saved += amount;
+
+            // ✅ add transaction
+            setTransactions(prev => [
+                ...prev,
+                {
+                    id: Date.now(),
+                    type: "Deposit",
+                    amount: amount
+                }
+            ]);
+
             setDepositAmount("");
         };
 
@@ -48,6 +60,16 @@ const DashboardPage = () => {
             //  smart Goal lock feature
             if (vaultData.saved < goal) {
                 alert("Funds are locked until goal is reached 🔒");
+
+                setTransactions(prev => [
+                    ...prev,
+                    {
+                        id: Date.now(),
+                        type: "Withdraw (Locked)",
+                        amount: amount
+                    }
+                ]);
+
                 return;
             }
 
@@ -58,6 +80,17 @@ const DashboardPage = () => {
             }
 
             vaultData.saved -= amount;
+
+            // ✅ add transaction
+            setTransactions(prev => [
+                ...prev,
+                {
+                    id: Date.now(),
+                    type: "Withdraw",
+                    amount: amount
+                }
+            ]);
+
             setWithdrawAmount("");
         };
 
@@ -303,62 +336,40 @@ const DashboardPage = () => {
             </div>
             <div className="card">
                 <div className="card-header">
-                    <p className="card-title">Top Orders</p>
+                    <p className="card-title">Transaction History</p>
                 </div>
                 <div className="card-body p-0">
                     <div className="relative h-[500px] w-full flex-shrink-0 overflow-auto rounded-none [scrollbar-width:_thin]">
                         <table className="table">
                             <thead className="table-header">
                                 <tr className="table-row">
-                                    <th className="table-head">#</th>
-                                    <th className="table-head">Product</th>
-                                    <th className="table-head">Price</th>
-                                    <th className="table-head">Status</th>
-                                    <th className="table-head">Rating</th>
-                                    <th className="table-head">Actions</th>
+                                    <th className="table-head">Type</th>
+                                    <th className="table-head">Transaction ID</th>
+                                    <th className="table-head">Amount</th>
                                 </tr>
                             </thead>
                             <tbody className="table-body">
-                                {topProducts.map((product) => (
-                                    <tr
-                                        key={product.number}
-                                        className="table-row"
-                                    >
-                                        <td className="table-cell">{product.number}</td>
+                                {transactions.map((tx) => (
+                                    <tr key={tx.id} className="table-row">
+
                                         <td className="table-cell">
-                                            <div className="flex w-max gap-x-4">
-                                                <img
-                                                    src={product.image}
-                                                    alt={product.name}
-                                                    className="size-14 rounded-lg object-cover"
-                                                />
-                                                <div className="flex flex-col">
-                                                    <p>{product.name}</p>
-                                                    <p className="font-normal text-slate-600 dark:text-slate-400">{product.description}</p>
-                                                </div>
-                                            </div>
+                                            <span className={
+                                                tx.type.includes("Deposit")
+                                                    ? "text-green-500"
+                                                    : "text-red-500"
+                                            }>
+                                                {tx.type}
+                                            </span>
                                         </td>
-                                        <td className="table-cell">${product.price}</td>
-                                        <td className="table-cell">{product.status}</td>
+
                                         <td className="table-cell">
-                                            <div className="flex items-center gap-x-2">
-                                                <Star
-                                                    size={18}
-                                                    className="fill-yellow-600 stroke-yellow-600"
-                                                />
-                                                {product.rating}
-                                            </div>
+                                            #{tx.id.toString().slice(-6)}
                                         </td>
+
                                         <td className="table-cell">
-                                            <div className="flex items-center gap-x-4">
-                                                <button className="text-blue-500 dark:text-blue-600">
-                                                    <PencilLine size={20} />
-                                                </button>
-                                                <button className="text-red-500">
-                                                    <Trash size={20} />
-                                                </button>
-                                            </div>
+                                            {tx.amount} ALGO
                                         </td>
+
                                     </tr>
                                 ))}
                             </tbody>
