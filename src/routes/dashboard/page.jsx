@@ -14,6 +14,9 @@ const DashboardPage = () => {
     const { theme } = useTheme();
     const [depositAmount, setDepositAmount] = useState("");
     const [withdrawAmount, setWithdrawAmount] = useState("");
+    const [goal, setGoal] = useState(20);
+    const [isEditingGoal, setIsEditingGoal] = useState(false);
+    const [newGoal, setNewGoal] = useState("");
     const vaultData = {
         wallet: 25,
         saved: 10,
@@ -33,30 +36,44 @@ const DashboardPage = () => {
             setDepositAmount("");
         };
 
-    const handleWithdraw = () => {
-        const amount = Number(withdrawAmount);
+        const handleWithdraw = () => {
+            const amount = Number(withdrawAmount);
 
-        // to handle Invalid input
-        if (!amount || amount <= 0) {
-            alert("Enter a valid amount ❌");
-            return;
-        }
+            // to handle Invalid input
+            if (!amount || amount <= 0) {
+                alert("Enter a valid amount ❌");
+                return;
+            }
 
-        //  smart Goal lock feature
-        if (vaultData.saved < vaultData.goal) {
-            alert("Funds are locked until goal is reached 🔒");
-            return;
-        }
+            //  smart Goal lock feature
+            if (vaultData.saved < goal) {
+                alert("Funds are locked until goal is reached 🔒");
+                return;
+            }
 
-        // Prevent overdraft
-        if (amount > vaultData.saved) {
-            alert("Insufficient balance ❌");
-            return;
-        }
+            // Prevent overdraft
+            if (amount > vaultData.saved) {
+                alert("Insufficient balance ❌");
+                return;
+            }
 
-        vaultData.saved -= amount;
-        setWithdrawAmount("");
-    };
+            vaultData.saved -= amount;
+            setWithdrawAmount("");
+        };
+
+        const handleSetGoal = () => {
+            const value = Number(newGoal);
+
+            if (!value || value <= 0) {
+                alert("Enter valid goal ❌");
+                return;
+            }
+
+            setGoal(value);
+            setIsEditingGoal(false);
+            setNewGoal("");
+        };
+
 
     return (
         <div className="flex flex-col gap-y-4">
@@ -105,9 +122,40 @@ const DashboardPage = () => {
                     </div>
 
                     <div className="card-body bg-slate-100 transition-colors dark:bg-slate-950">
-                        <p className="text-3xl font-bold text-slate-900 transition-colors dark:text-slate-50">
-                            {vaultData.goal} ALGO
-                        </p>
+                    <div className="flex items-center justify-between">
+
+                        {!isEditingGoal ? (
+                            <>
+                                <p className="text-3xl font-bold text-slate-900 dark:text-slate-50">
+                                    {goal} ALGO
+                                </p>
+
+                                <button
+                                    onClick={() => setIsEditingGoal(true)}
+                                    className="text-purple-500"
+                                >
+                                    ✏️
+                                </button>
+                            </>
+                        ) : (
+                            <div className="flex gap-2">
+                                <input
+                                    type="number"
+                                    value={newGoal}
+                                    onChange={(e) => setNewGoal(e.target.value)}
+                                    className="p-1 rounded bg-slate-200 dark:bg-slate-800 text-black dark:text-white"
+                                />
+
+                                <button
+                                    onClick={handleSetGoal}
+                                    className="bg-purple-500 text-white px-2 rounded"
+                                >
+                                    Save
+                                </button>
+                            </div>
+                        )}
+
+                    </div>
 
                         <span className="flex w-fit items-center gap-x-2 rounded-full border border-purple-500 px-2 py-1 font-medium text-purple-500">
                             🎯 Target Set
@@ -125,7 +173,7 @@ const DashboardPage = () => {
                     <div className="card-body bg-slate-100 dark:bg-slate-950">
                         <p className="text-3xl font-bold text-slate-900 dark:text-slate-50">
                             {vaultData.goal > 0 
-                                ? ((vaultData.saved / vaultData.goal) * 100).toFixed(0) 
+                                ? ((vaultData.saved / goal) * 100).toFixed(0) 
                                 : 0}%
                         </p>
 
