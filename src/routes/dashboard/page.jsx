@@ -10,7 +10,12 @@ import { Footer } from "@/layouts/footer";
 
 import { CreditCard, DollarSign, Package, PencilLine, Star, Trash, TrendingUp, Users, Wallet, Target } from "lucide-react";
 
+import { useNavigate } from "react-router-dom";
+
+
+
 const DashboardPage = () => {
+    const navigate = useNavigate();
     const { theme } = useTheme();
     const [depositAmount, setDepositAmount] = useState("");
     const [withdrawAmount, setWithdrawAmount] = useState("");
@@ -129,6 +134,78 @@ const showNotification = (message, type = "info") => {
     return (
         <div className="flex flex-col gap-y-4">
             <h1 className="title">Dashboard</h1>
+            {/*rewards bar*/}
+            <div className="w-full flex justify-center">
+            <div className="w-full max-w-6xl flex items-center justify-between rounded-xl border border-purple-500/20 bg-purple-500/5 px-6 py-4">
+
+                <div className="flex items-center gap-10">
+
+                {/* Points */}
+                <div className="flex items-center gap-3">
+                    <span className="text-amber-400 text-xl">⭐</span>
+                    <div>
+                    <p className="text-xs text-slate-400">Total Points</p>
+                    <p className="text-sm font-semibold text-slate-100">
+                        {transactions.length * 5} pts
+                    </p>
+                    </div>
+                </div>
+
+                <div className="h-6 w-px bg-slate-700" />
+
+                {/* Badges */}
+                <div className="flex items-center gap-3">
+                    <span className="text-purple-400 text-xl">🏅</span>
+                    <div>
+                    <p className="text-xs text-slate-400">Badges</p>
+                    <p className="text-sm font-semibold text-slate-100">
+                        {transactions.length > 0 ? 1 : 0} / 8
+                    </p>
+                    </div>
+                </div>
+
+                <div className="h-6 w-px bg-slate-700" />
+
+                {/* Milestone */}
+                <div className="flex items-center gap-3">
+                    <span className="text-blue-400 text-xl">🎯</span>
+                    <div>
+                    <p className="text-xs text-slate-400">Next Milestone</p>
+                    <p className="text-sm font-semibold text-slate-100">
+                        {goal} ALGO
+                    </p>
+                    </div>
+                </div>
+
+                <div className="h-6 w-px bg-slate-700" />
+
+                {/* Badge */}
+                <div className="flex items-center gap-3">
+                    <span className="text-green-400 text-xl">🏆</span>
+                    <div>
+                    <p className="text-xs text-slate-400">Current Badge</p>
+                    <p className="text-sm font-semibold text-green-400">
+                        {vaultData.saved >= 50 ? "Goal Crusher" :
+                        vaultData.saved >= 25 ? "Half Way" :
+                        vaultData.saved >= 10 ? "Vault Keeper" :
+                        vaultData.saved >= 1 ? "First Steps" :
+                        "No Badge"}
+                    </p>
+                    </div>
+                </div>
+
+                </div>
+
+                {/* RIGHT SIDE BUTTON */}
+                <button
+                onClick={() => navigate("/awards")}
+                className="flex items-center gap-2 rounded-lg bg-purple-500 px-5 py-2 text-sm font-medium text-white hover:bg-purple-600 transition"
+                >
+                View Rewards 🎁
+                </button>
+
+            </div>
+            </div>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 <div className="card">
                     <div className="card-header">
