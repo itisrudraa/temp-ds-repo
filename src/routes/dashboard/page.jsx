@@ -18,11 +18,12 @@ const DashboardPage = () => {
     const [isEditingGoal, setIsEditingGoal] = useState(false);
     const [newGoal, setNewGoal] = useState("");
     const [transactions, setTransactions] = useState([]);
-    const vaultData = {
-        wallet: 25,
-        saved: 10,
-        goal: 20
-    };
+        const vaultData = {
+            wallet: 25,
+            saved: 10,
+            goal: 20
+        };
+        const progress = goal > 0 ? (vaultData.saved / goal) * 100 : 0;
 
         const handleDeposit = () => {
             const amount = Number(depositAmount);
@@ -202,11 +203,21 @@ const DashboardPage = () => {
                     </div>
 
                     <div className="card-body bg-slate-100 dark:bg-slate-950">
-                        <p className="text-3xl font-bold text-slate-900 dark:text-slate-50">
-                            {vaultData.goal > 0 
-                                ? ((vaultData.saved / goal) * 100).toFixed(0) 
-                                : 0}%
-                        </p>
+                    <p className="text-3xl font-bold text-slate-900 dark:text-slate-50">
+                    {progress.toFixed(0)}%
+                    </p>
+                    <div className="mt-4 w-full">
+                    <div className="h-3 w-full rounded-full bg-slate-300 dark:bg-slate-700 overflow-hidden">
+                    <div
+                        className={`h-3 rounded-full transition-all duration-500 ${
+                            progress >= 100 ? "bg-green-500" :
+                            progress >= 50 ? "bg-yellow-500" :
+                            "bg-red-500"
+                        }`}
+                        style={{ width: `${progress}%` }}
+                    ></div>
+                    </div>
+                    </div>
 
                         <span className="flex w-fit items-center gap-x-2 rounded-full border border-green-500 px-2 py-1 font-medium text-green-500">
                             🚀 On Track
@@ -227,9 +238,9 @@ const DashboardPage = () => {
                             <AreaChart
                                 data={overviewData}
                                 margin={{
-                                    top: 0,
+                                    top: 20,
                                     right: 0,
-                                    left: 0,
+                                    left: 30,
                                     bottom: 0,
                                 }}
                             >
@@ -255,7 +266,7 @@ const DashboardPage = () => {
                                 </defs>
                                 <Tooltip
                                     cursor={false}
-                                    formatter={(value) => `$${value}`}
+                                    formatter={(value) => `${value} Algo`}
                                 />
 
                                 <XAxis
@@ -268,8 +279,10 @@ const DashboardPage = () => {
                                     dataKey="total"
                                     strokeWidth={0}
                                     stroke={theme === "light" ? "#475569" : "#94a3b8"}
-                                    tickFormatter={(value) => `$${value}`}
+                                    tickFormatter={(value) => `${value} Algo`}
                                     tickMargin={6}
+                                    width={80}
+                                    padding={{ top: 10 }}
                                 />
 
                                 <Area
