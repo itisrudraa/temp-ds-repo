@@ -23,16 +23,30 @@ const DashboardPage = () => {
             saved: 10,
             goal: 20
         };
+
+        const [notification, setNotification] = useState({
+    message: "",
+    type: "",
+    show: false
+});
+
+const showNotification = (message, type = "info") => {
+    setNotification({ message, type, show: true });
+
+    setTimeout(() => {
+        setNotification(prev => ({ ...prev, show: false }));
+    }, 3000);
+};
         const progress = goal > 0 ? (vaultData.saved / goal) * 100 : 0;
 
         const handleDeposit = () => {
             const amount = Number(depositAmount);
 
             // to handle Invalid input
-            if (!amount || amount <= 0) {
-                alert("Enter a valid amount ❌");
-                return;
-            }
+           if (!amount || amount <= 0) {
+        showNotification("Enter a valid amount ❌", "error");
+        return;
+    }
 
             vaultData.saved += amount;
 
@@ -45,6 +59,8 @@ const DashboardPage = () => {
                 },
                 ...prev
             ]);
+          
+                showNotification("Deposit successful ✅", "success");
 
             setDepositAmount("");
         };
@@ -52,32 +68,32 @@ const DashboardPage = () => {
         const handleWithdraw = () => {
             const amount = Number(withdrawAmount);
 
-            if (!amount || amount <= 0) {
-                alert("Enter valid amount ❌");
-                return;
-            }
+             if (!amount || amount <= 0) {
+        showNotification("Enter valid amount ❌", "error");
+        return;
+    }
 
             // smart Goal lock
             if (vaultData.saved < goal) {
-                alert("Funds are locked until goal is reached 🔒");
+        showNotification("Funds are locked until goal is reached 🔒", "warning");
 
-                setTransactions(prev => [
-                    {
-                        id: Date.now(),
-                        type: "Withdraw (Locked)",
-                        amount: amount
-                    },
-                    ...prev
-                ]);
+        setTransactions(prev => [
+            {
+                id: Date.now(),
+                type: "Withdraw (Locked)",
+                amount: amount
+            },
+            ...prev
+        ]);
 
-                return;
-            }
+        return;
+    }
 
             // 🚫 Prevent overdraft
             if (amount > vaultData.saved) {
-                alert("Insufficient balance ❌");
-                return;
-            }
+        showNotification("Insufficient balance ❌", "error");
+        return;
+    }
 
             vaultData.saved -= amount;
 
@@ -90,22 +106,25 @@ const DashboardPage = () => {
                 ...prev
             ]);
 
+             showNotification("Withdrawal successful 💸", "success");
+
             setWithdrawAmount("");
         };
 
         const handleSetGoal = () => {
-            const value = Number(newGoal);
+    const value = Number(newGoal);
 
-            if (!value || value <= 0) {
-                alert("Enter valid goal ❌");
-                return;
-            }
+    if (!value || value <= 0) {
+        showNotification("Enter valid goal ❌", "error");
+        return;
+    }
 
-            setGoal(value);
-            setIsEditingGoal(false);
-            setNewGoal("");
-        };
+    setGoal(value);
+    setIsEditingGoal(false);
+    setNewGoal("");
 
+    showNotification("Goal updated 🎯", "success");
+};
 
     return (
         <div className="flex flex-col gap-y-4">
@@ -301,6 +320,12 @@ const DashboardPage = () => {
                         <p className="card-title">Vault Actions</p>
                     </div>
                     <div className="card-body h-[300px] flex flex-col gap-6 p-4">
+
+                        {notification.show && (
+    <div className={`notification ${notification.type}`}>
+        {notification.message}
+    </div>
+)}
 
                         {/* 🟢 DEPOSIT */}
                         <div className="flex flex-col gap-2">
