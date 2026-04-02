@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/contexts/theme-context";
 import Layout from "@/routes/layout";
 import DashboardPage from "@/routes/dashboard/page";
 import RewardsPage from "./routes/awards/page";
+import HomePage from "./routes/homepage/page";
 
 function App() {
     const router = createBrowserRouter([
@@ -19,6 +20,10 @@ function App() {
                 {
                     path: "awards",
                     element: <RewardsPage />,
+                },
+                {
+                    path: "homepage",
+                    element: <HomePage />
                 },
             ],
         },
