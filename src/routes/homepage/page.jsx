@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Wallet, Shield, Target, TrendingUp, Lock, Star, Zap } from "lucide-react";
+import { Wallet, Shield, Target, TrendingUp, Lock, Star, Zap, Vault } from "lucide-react";
 
 const HomePage = () => {
     const navigate = useNavigate();
@@ -23,9 +23,9 @@ const HomePage = () => {
             <nav className="flex items-center justify-between px-8 py-5 border-b border-white/5">
                 <div className="flex items-center gap-2">
                     <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-purple-500">
-                        <Zap size={16} className="text-white" />
+                        <Vault size={16} className="text-white" />
                     </div>
-                    <span className="text-lg font-bold text-white">AlgoVault</span>
+                    <span className="text-lg font-bold text-white">OurVault</span>
                 </div>
 
                 <div className="hidden md:flex items-center gap-8 text-sm text-slate-400">
@@ -60,7 +60,7 @@ const HomePage = () => {
                 </h1>
 
                 <p className="mt-6 max-w-lg text-base text-slate-400 leading-relaxed">
-                    AlgoVault is a decentralized savings dApp built on Algorand. Lock your
+                    OurVault is a decentralized savings dApp built on Algorand. Lock your
                     ALGO tokens, set a savings goal, track your progress, and earn badges
                     and reward points along the way — no bank, no middleman.
                 </p>
@@ -99,7 +99,7 @@ const HomePage = () => {
             {/* ── Features ── */}
             <section className="mx-auto max-w-5xl px-6 py-20">
                 <div className="mb-10 text-center">
-                    <p className="text-xs uppercase tracking-widest text-purple-400 mb-2">Why AlgoVault</p>
+                    <p className="text-xs uppercase tracking-widest text-purple-400 mb-2">Why OurVault</p>
                     <h2 className="text-3xl font-black text-white">Your money. Your goals. Your rewards.</h2>
                 </div>
 
@@ -203,7 +203,7 @@ const HomePage = () => {
                         Ready to build your ALGO savings vault?
                     </h2>
                     <p className="text-sm text-slate-400 mb-8 max-w-md mx-auto">
-                        AlgoVault is open, decentralized, and built for anyone who wants
+                        OurVault is open, decentralized, and built for anyone who wants
                         to save smarter on Algorand.
                     </p>
                     <button
@@ -221,12 +221,12 @@ const HomePage = () => {
             <footer className="border-t border-white/5 px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
                 <div className="flex items-center gap-2">
                     <div className="flex h-6 w-6 items-center justify-center rounded-md bg-purple-500">
-                        <Zap size={12} className="text-white" />
+                        <Vault size={12} className="text-white" />
                     </div>
-                    <span className="text-sm font-bold text-white">AlgoVault</span>
+                    <span className="text-sm font-bold text-white">OurVault</span>
                 </div>
                 <p className="text-xs text-slate-500">Built on Algorand · Decentralized · Open Source</p>
-                <p className="text-xs text-slate-600">© 2026 AlgoVault</p>
+                <p className="text-xs text-slate-600">© 2026 OurVault</p>
             </footer>
 
         </div>
