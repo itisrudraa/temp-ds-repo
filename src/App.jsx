@@ -8,26 +8,26 @@ import RewardsPage from "./routes/awards/page";
 import HomePage from "./routes/homepage/page";
 
 function App() {
-    const router = createBrowserRouter([
-        {
-            path: "/",
-            element: <Layout />,
-            children: [
-                {
-                    index: true,
-                    element: <DashboardPage />,
-                },
-                {
-                    path: "awards",
-                    element: <RewardsPage />,
-                },
-                {
-                    path: "homepage",
-                    element: <HomePage />
-                },
-            ],
-        },
-    ]);
+   const router = createBrowserRouter([
+    {
+        path: "/",
+        element: <HomePage />,
+    },
+    {
+        path: "/",
+        element: <Layout />,
+        children: [
+            {
+                path: "dashboard",
+                element: <DashboardPage />,
+            },
+            {
+                path: "awards",
+                element: <RewardsPage />,
+            }
+        ]
+    }
+]);
 
     return (
         <ThemeProvider storageKey="theme">
